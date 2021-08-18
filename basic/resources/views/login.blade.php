@@ -3,6 +3,9 @@
 @section('app_content')
 <div class="row justify-content-center">
     <div class="col-6">
+        @if(session('status'))
+        <span class="text-success">{{ session('status') }}</span>
+        @endisset
         <h2 class="text-center">Login</h2>
         <form action="{{ route('check.login') }}" method="POST">
             @csrf
