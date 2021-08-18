@@ -95,7 +95,7 @@ Route::post('/reset-password', function (Request $request) {
 # Email verify
 
 Route::get('/email/verify', function () {
-    if (auth()->user()->email_verified_at) {
+    if (auth('web')->user()->email_verified_at) {
         return back();
     }
     return view('verify-email');
@@ -119,4 +119,11 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 
 # Dash board
-Route::get('/dashboard', fn () => view('dash'))->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', fn () => view('dash'))->middleware(['auth', 'custom_verify'])->name('dashboard');
+
+
+Route::get(
+    'user-test',
+    fn () => 'Hello Shahin!'
+)
+    ->middleware(['auth', 'custom_verify']);
