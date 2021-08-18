@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Notifications\AdminVerifyNotification;
+use App\Notifications\TeacherVerifyNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Admin extends Authenticatable implements MustVerifyEmail
+class Teacher extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -52,7 +53,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        // info('notify admin');
-        $this->notify(new AdminVerifyNotification);
+        info('notify teacher');
+        $this->notify(new TeacherVerifyNotification);
     }
 }

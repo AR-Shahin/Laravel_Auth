@@ -24,6 +24,8 @@ class CustomVerifyRedirect
                 return redirect()->route('admin.verification.notice');
             } else if ($request->user()->getTable() === 'users') {
                 return redirect()->route('verification.notice');
+            } else if ($request->user()->getTable() === 'teachers') {
+                return redirect()->route('teacher.verification.notice');
             }
         }
         return $next($request);
