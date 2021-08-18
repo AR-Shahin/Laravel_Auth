@@ -1,21 +1,40 @@
 <?php
 
+use App\Mail\TestMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\LoginController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 
 Route::get('/', function () {
-
+    // Mail::to('ars@mail.com')->send(new TestMail);
+    // return 1;
     return redirect()->route('login');
 });
+
+# Login
 Route::get('login', [LoginController::class, 'login'])->name('login');
-Route::post('login', [LoginController::class, 'loginCheck']);
-Route::get('register', [LoginController::class, 'register'])->name('registe');
-Route::post('register', [LoginController::class, 'registerStore'])->name('register');
+Route::post('login', [LoginController::class, 'authenticate'])->name('check.login');
+
+# Logout
+Route::post('logout', function (Request $request) {
+    Auth::logout();
+
+    $request->session()->invalidate();
+
+    $request->session()->regenerateToken();
+
+    return redirect('/');
+})->name('logout');
+
+# Register
+Route::get('register', [LoginController::class, 'register'])->name('register');
+Route::post('register', [LoginController::class, 'registerStore'])->name('check.register');
 
 
 
@@ -25,10 +44,10 @@ Route::get('/forgot-password', function () {
 
 
 Route::post('/forgot-password', function (Request $request) {
-    //return $request;
+    return $request;
     $request->validate(['email' => 'required|email']);
 
-    $status = Password::sendResetLink(
+    $status = Password::broker('users')->sendResetLink(
         $request->only('email')
     );
 
@@ -41,3 +60,33 @@ Route::post('/forgot-password', function (Request $request) {
 Route::get('/reset-password/{token}', function ($token) {
     return view('reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
+
+
+# Email verify
+
+Route::get('/email/verify', function () {
+    if (auth()->user()->email_verified_at) {
+        return back();
+    }
+    return view('verify-email');
+})->middleware(['auth'])->name('verification.notice');
+
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/dashboard');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+
+
+
+# Dash board
+Route::get('/dashboard', fn () => view('dash'))->middleware(['auth', 'verified'])->name('dashboard');
