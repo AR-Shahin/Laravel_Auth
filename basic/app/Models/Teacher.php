@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\AdminVerifyNotification;
+use App\Notifications\TeacherResetPasswordNotification;
 use App\Notifications\TeacherVerifyNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -55,5 +56,10 @@ class Teacher extends Authenticatable implements MustVerifyEmail
     {
         info('notify teacher');
         $this->notify(new TeacherVerifyNotification);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new TeacherResetPasswordNotification($token));
     }
 }

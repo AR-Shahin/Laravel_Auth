@@ -1,9 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -53,4 +57,52 @@ Route::prefix('teacher')->as('teacher.')->group(function () {
 
         return redirect()->route('teacher.dashboard');
     })->middleware(['auth:teacher', 'signed'])->name('verification.verify');
+
+
+    # Reset Password
+    Route::get('/forgot-password', function () {
+        return view('teacher.forgot-password');
+    })->middleware('guest:teacher')->name('password.request');
+
+
+    Route::post('/forgot-password', function (Request $request) {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::broker('teachers')->sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with(['status' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
+    })->middleware('guest:teacher')->name('password.email');
+
+
+    Route::get('/reset-password/{token}', function ($token) {
+        return view('teacher.reset-password', ['token' => $token]);
+    })->middleware('guest:teacher')->name('password.reset');
+
+
+    Route::post('/reset-password', function (Request $request) {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::broker('teachers')->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => $password
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('teacher.login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
+    })->middleware('guest:teacher')->name('password.update');
 });

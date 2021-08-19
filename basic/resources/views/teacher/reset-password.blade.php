@@ -3,7 +3,8 @@
 @section('app_content')
 <div class="row justify-content-center">
     <div class="col-6">
-        <form action="{{ route('password.update') }}" method="POST">
+        <h3 class="text-center">Teacher Reset Password</h3>
+        <form action="{{ route('teacher.password.update') }}" method="POST">
             @csrf
             <input type="hidden" name="token" value="{{ request()->route('token')  }}">
             <div class="form-group">

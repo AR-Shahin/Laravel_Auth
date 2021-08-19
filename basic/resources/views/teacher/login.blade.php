@@ -28,7 +28,7 @@
                 <button class="btn btn-success btn-block btn-sm">Login</button>
             </div>
             <a href="{{ route('teacher.register') }}">Register</a>
-            {{-- <a href="{{ route('teacher.password.request') }}">Forgot</a> --}}
+            <a href="{{ route('teacher.password.request') }}">Forgot</a>
             <a href="{{ route('teacher.dashboard') }}">Home</a>
         </form>
     </div>
