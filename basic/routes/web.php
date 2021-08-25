@@ -127,3 +127,9 @@ Route::get(
     fn () => 'Hello Shahin!'
 )
     ->middleware(['auth', 'custom_verify']);
+
+
+# Cache
+Route::get('cache', function () {
+    return 1;
+});
