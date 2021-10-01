@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\LoginController;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\SocialLoginController;
+use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -137,3 +138,10 @@ Route::get('cache', function () {
 
 Route::get('login/{provider}', [SocialLoginController::class, 'redirectOnProviders'])->name('social-login');
 Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback']);
+
+
+# Custom Pagination page
+Route::get('pagination', function () {
+    $users = User::paginate(5);
+    return view('paginate', compact('users'));
+});
