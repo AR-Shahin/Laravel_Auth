@@ -30,6 +30,11 @@
             <a href="{{ route('register') }}">Register</a>
             <a href="{{ route('password.request') }}">Forgot</a>
             <a href="{{ route('dashboard') }}">Home</a>
+          <div>
+            <a href="">Google</a>
+            <a href="{{ route('social-login','github') }}">Github</a>
+            <a href="">Facebook</a>
+          </div>
         </form>
     </div>
 </div>

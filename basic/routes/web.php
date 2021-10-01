@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\LoginController;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Controllers\SocialLoginController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
@@ -133,3 +134,6 @@ Route::get(
 Route::get('cache', function () {
     return 1;
 });
+
+Route::get('login/{provider}', [SocialLoginController::class, 'redirectOnProviders'])->name('social-login');
+Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback']);
