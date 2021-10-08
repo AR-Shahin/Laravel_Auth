@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -13,7 +15,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        // \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException::class
     ];
 
     /**
@@ -34,8 +36,12 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Record not found.'
+                ], 404);
+            }
         });
     }
 }
