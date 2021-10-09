@@ -1,5 +1,7 @@
 <?php
 
+use App\Mail\GmailMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('mail', function () {
+    if (Mail::to('a@mail.com')->send(new GmailMail)) {
+        return 'ok';
+    }
 });

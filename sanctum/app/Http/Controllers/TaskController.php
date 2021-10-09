@@ -17,7 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return new TaskCollection(Task::paginate(5));
+        return new TaskCollection(Task::latest()->paginate(5));
     }
 
     /**
@@ -25,8 +25,9 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($request)
+    public function searchTask($query)
     {
+        return new TaskCollection(Task::where('name', 'like', "%$query%")->latest()->paginate(5));
     }
 
     /**
@@ -77,6 +78,7 @@ class TaskController extends Controller
         $task = $task->update([
             'name' => $request->name
         ]);
+        info($task);
         return $this->successResponse(new TaskResource($task), $task, 'Task Updated Successfully!', 200);
     }
 
