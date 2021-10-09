@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
@@ -16,7 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return new TaskCollection(Task::paginate(1));
+        return new TaskCollection(Task::paginate(5));
     }
 
     /**
@@ -24,9 +25,8 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($request)
     {
-        //
     }
 
     /**
@@ -35,9 +35,12 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
-        //
+        $task = Task::create([
+            'name' => $request->name
+        ]);
+        return $this->successResponse(new TaskResource($task), $task, 'Task', 201);
     }
 
     /**
@@ -46,9 +49,9 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        //
+        return $this->successResponse(new TaskResource($task), $task, 'Task Retrieved Successfully!', 200);
     }
 
     /**
@@ -69,9 +72,12 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TaskRequest $request, Task $task)
     {
-        //
+        $task = $task->update([
+            'name' => $request->name
+        ]);
+        return $this->successResponse(new TaskResource($task), $task, 'Task Updated Successfully!', 200);
     }
 
     /**
@@ -80,8 +86,20 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        //
+        if ($task->delete()) {
+            return $this->successResponse([], null, 'Task Deleted Successfully!', 204);
+        }
+    }
+
+    protected function successResponse($resources, $data, $mgs = null, $code = 200)
+    {
+        return response([
+            'success' => true,
+            'data' => $resources,
+            'code' => $code,
+            'message' => $mgs
+        ], $code);
     }
 }
