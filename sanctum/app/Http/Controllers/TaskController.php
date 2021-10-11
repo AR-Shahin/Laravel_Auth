@@ -75,10 +75,9 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
-        $task = $task->update([
+        $task->update([
             'name' => $request->name
         ]);
-        info($task);
         return $this->successResponse(new TaskResource($task), $task, 'Task Updated Successfully!', 200);
     }
 
@@ -103,5 +102,18 @@ class TaskController extends Controller
             'code' => $code,
             'message' => $mgs
         ], $code);
+    }
+
+    public function activeTask(Task $task)
+    {
+        $task->is_done = true;
+        $task->save();
+        return $this->successResponse(new TaskResource($task), $task, 'Task Active Successfully!', 200);
+    }
+    public function inactiveTask(Task $task)
+    {
+        $task->is_done = false;
+        $task->save();
+        return $this->successResponse(new TaskResource($task), $task, 'Task Inactive Successfully!', 200);
     }
 }

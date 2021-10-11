@@ -23,8 +23,14 @@ class TaskRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => ['required']
-        ];
+        if ($this->method() === 'POST') {
+            return [
+                'name' => ['required', 'unique:tasks,name']
+            ];
+        } else {
+            return [
+                'name' => ['required', "unique:tasks,name,{$this->task->id}"]
+            ];
+        }
     }
 }
