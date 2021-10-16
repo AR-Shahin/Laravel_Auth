@@ -11,11 +11,18 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        $request->validate([
+            'name' => ['required'],
+            'email' => ['email', 'required', 'unique:users,email'],
+            'password' => ['required', 'confirmed'],
+            'password_confirmation' => 'required_with:password|same:password',
+            'image' => ['required'],
+        ]);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'image' => File::upload($request->file('image'), 'user')
+            'image' => $request->hasFile('image') ? File::upload($request->file('image'), 'user') : ''
         ]);
         $success['token'] =  $user->createToken('SanctumAPI')->plainTextToken;
         $success['name'] =  $user->name;
@@ -25,11 +32,13 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // return $request->all();
+        $request->validate(['email' => 'required|exists:users,email']);
+        //return $request->all();
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // return auth('user')->user();
             $user = Auth::guard('user')->user();
             $success['token'] =  $user->createToken('SanctumAPI')->plainTextToken;
-            $success['name'] =  $user->name;
+            $success['user'] =  $user;
 
             return $this->sendResponse($success, 'User login successfully.');
         } else {
@@ -50,5 +59,9 @@ class AuthController extends Controller
         return response([
             'user' => auth('user')->user()
         ], 200);
+    }
+    public function sex(Request $request)
+    {
+        return 111;
     }
 }

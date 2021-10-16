@@ -27,7 +27,7 @@ class TaskController extends Controller
      */
     public function searchTask($query)
     {
-        return new TaskCollection(Task::where('name', 'like', "%$query%")->latest()->paginate(5));
+        return new TaskCollection(Task::where('name', 'like', "$query%")->latest()->paginate(5));
     }
 
     /**
