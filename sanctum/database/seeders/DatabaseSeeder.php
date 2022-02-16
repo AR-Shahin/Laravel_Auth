@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Task;
+use App\Models\User;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 
@@ -18,5 +19,10 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         Task::factory(15)->create();
         Product::factory(9)->create();
+        User::create([
+            'name' => 'User',
+            'email' => 'user@mail.com',
+            'password' => bcrypt('password')
+        ]);
     }
 }

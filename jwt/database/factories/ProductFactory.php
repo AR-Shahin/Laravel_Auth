@@ -2,19 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Product;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ */
 class ProductFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Product::class;
-
     /**
      * Define the model's default state.
      *
@@ -22,15 +16,10 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        $name = $this->faker->sentence(3);
-        $image = 'https://picsum.photos/id/' . rand(30, 600) . '/700/600';
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'des' => $this->faker->sentence(50),
-            'image' =>  $image,
-            'price' => rand(100, 500),
-            'quantity' => rand(20, 50)
+            'name' => $this->faker->sentence(5),
+            'slug' => str($this->faker->sentence(5))->slug(),
+            'image' => 'https://picsum.photos/200/300'
         ];
     }
 }

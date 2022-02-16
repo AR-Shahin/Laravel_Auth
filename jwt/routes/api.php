@@ -1,39 +1,48 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:api'])->group(function () {
-    # Product
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::prefix('products')->controller(ProductController::class)->group(function () {
+    Route::middleware('auth:admin_api')->group(function () {
+        Route::post('/', 'store');
+        Route::post('update/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+    });
 
-    # Cart
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart', [CartController::class, 'store']);
-    Route::delete('/cart/{productId}', [CartController::class, 'destroy']);
-    Route::delete('/cart', [CartController::class, 'destroyAll']);
-
-    # Auth
-    Route::prefix('auth')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/refresh', [AuthController::class, 'refresh']);
-        Route::get('/me', [AuthController::class, 'userProfile']);
+    Route::middleware('auth:customer_api')->group(function () {
+        Route::get('/', 'getAllProduct');
+        Route::get('/{id}', 'show');
     });
 });
 
 
-# Auth
-Route::group(['prefix' => 'auth'], function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
+Route::prefix('admin')->controller(AuthController::class)->group(function () {
+
+    Route::post('login', 'login');
+    Route::post('register', 'register');
+    Route::middleware('auth:admin_api')->group(function () {
+        Route::post('logout', 'logout');
+        Route::post('me', 'me');
+    });
+});
+
+Route::prefix('customer')->controller(CustomerAuthController::class)->group(function () {
+
+    Route::post('login', 'login');
+    Route::post('register', 'register');
+    Route::middleware('auth:admin_api')->group(function () {
+        Route::post('logout', 'logout');
+        Route::post('me', 'me');
+    });
 });

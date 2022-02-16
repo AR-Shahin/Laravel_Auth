@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return Product::get();
+        return Product::paginate(4);
     }
 
     public function show(Product $product)
