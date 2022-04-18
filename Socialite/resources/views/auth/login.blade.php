@@ -35,7 +35,10 @@
                     Login with Google</a> |
                 <a href="{{ route('social.login', 'github') }}" class="p-4 bg-green-600"> <i
                         class="fa fa-google"></i>
-                    Login with Github</a>
+                    Login with Github</a> |
+                <a href="{{ route('social.login', 'linkedin') }}" class="p-4 bg-green-600"> <i
+                        class="fa fa-linkedin"></i>
+                    Login with Linkedin</a>
             </div>
             <!-- Remember Me -->
             <div class="block mt-4">
