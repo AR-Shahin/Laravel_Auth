@@ -8,4 +8,10 @@ Route::get('/', function () {
     return view('layouts.app');
 });
 
-Route::get('auto-complete-search', [AutoCompleteSearchController::class, 'index'])->name('auto-complete-search');
+# Auto Complete Search
+
+Route::controller(AutoCompleteSearchController::class)->prefix('auto-complete-search')->name('auto-complete-search')->group(function () {
+
+    Route::get('/', 'index');
+    Route::post('/data', 'getSearchData')->name('.data');
+});
