@@ -7,7 +7,7 @@
     </style>
 @endpush
 @section('title', 'Auto Complete Search')
-@section('project_title', 'Auto Complete Search')
+@section('project_title', 'User Check')
 
 @section('content')
     <div id="auto_complete">

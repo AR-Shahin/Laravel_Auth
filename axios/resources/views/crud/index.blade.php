@@ -48,7 +48,7 @@
     </div>
 </div>
 <!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+<div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -61,10 +61,6 @@
 
                 </form>
               </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -114,7 +110,7 @@
                 <td class="text-center">
                     <a href="" class="btn btn-sm btn-success" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#viewModal" id="viewRow"><i class="fa fa-eye"></i></a>
 
-                    <a href="" class="btn btn-sm btn-info" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#editModal" id="editRow"><i class="fa fa-edit"></i></a>
+                    <a href="" class="btn btn-sm btn-info" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#editModal" id="editRow"  data-backdrop="false"><i class="fa fa-edit"></i></a>
 
                     <a href="" id="deleteRow" class="btn btn-sm btn-danger" data-id="${item.slug}"><i class="fa fa-trash-alt"></i></a>
                 </td>
@@ -239,7 +235,11 @@ $('body').on('click','#editRow',function(){
         console.log(err);
     })
 })
-
+function hideFunc() {
+    var myModalEl = document.getElementById('editModal');
+    var modal = bootstrap.Modal.getOrCreateInstance(myModalEl)
+    modal.hide();
+}
 // // update
 $('body').on('submit','#editForm',function(e){
     e.preventDefault()
@@ -258,11 +258,12 @@ $('body').on('submit','#editForm',function(e){
         data.append('image', document.getElementById('editImage').files[0]);
         // log(data.get('image'))
         const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-
+        var myModal = new bootstrap.Modal(document.getElementById('#editModal'))
         axios.post(url,data).then(res => {
             getAllData();
-            let modal = $$('#editModal');
-            modal.hide()
+
+            // $('#editModal').modal('toggle');
+            hideFunc()
             setSuccessMessage('Data Update Successfully!')
         }).catch(err => {
             if(err.response.data.errors.image){
@@ -272,8 +273,8 @@ $('body').on('submit','#editForm',function(e){
     }else{
         sendUpdateAjaxRequest(url,{name: editName.val()}).then(res => {
             getAllData();
-            let modal = $$('#editModal');
-            modal.hide()
+            // $('#editModal').modal('toggle');
+            hideFunc()
             setSuccessMessage('Data Update Successfully!')
         }).catch(err => {
             if(err.response.data.errors.name){
