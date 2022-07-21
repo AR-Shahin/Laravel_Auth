@@ -108,11 +108,11 @@
                 <td>${item.name}</td>
                 <td><img src="{{ asset('${item.image}') }}" width="80px"></td>
                 <td class="text-center">
-                    <a href="" class="btn btn-sm btn-success" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#viewModal" id="viewRow"><i class="fa fa-eye"></i></a>
+                    <button class="btn btn-sm btn-success" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#viewModal" id="viewRow"><i class="fa fa-eye"></i></button>
 
-                    <a href="" class="btn btn-sm btn-info" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#editModal" id="editRow"  data-backdrop="false"><i class="fa fa-edit"></i></a>
+                    <button class="btn btn-sm btn-info" data-id="${item.slug}" data-bs-toggle="modal" data-bs-target="#editModal" id="editRow"  data-backdrop="false"><i class="fa fa-edit"></i></button>
 
-                    <a href="" id="deleteRow" class="btn btn-sm btn-danger" data-id="${item.slug}"><i class="fa fa-trash-alt"></i></a>
+                    <button id="deleteRow" class="btn btn-sm btn-danger" data-id="${item.slug}"><i class="fa fa-trash-alt"></i></button>
                 </td>
             </tr>
             `
@@ -162,9 +162,10 @@
 
 //   delete
     document.addEventListener("click", (e)=> {
-        if (e.target.matches('a[href], a[href] *')) {
-            e.preventDefault();
-        }
+        // if (e.target.matches('a[href], a[href] *')) {
+        //     e.preventDefault();
+        // }
+
     const row = e.target.closest('#deleteRow');
     if (row) {
         const slug = row.getAttribute("data-id");
@@ -176,14 +177,14 @@
 
  // view
  document.addEventListener("click", async (e)=> {
-    if (e.target.matches('a[href], a[href] *')) {
-            e.preventDefault();
-        }
+    // if (e.target.matches('a[href], a[href] *')) {
+    //         e.preventDefault();
+    //     }
     const row = e.target.closest('#viewRow');
     if (row) {
         const slug = row.getAttribute("data-id");
         const url = `${base_url}/crud/${slug}`;
-        console.log(url);
+        // console.log(url);
 
         try{
             const response = await axios.get(`${base_url}/crud/${slug}`);
@@ -262,8 +263,8 @@ $('body').on('submit','#editForm',function(e){
         axios.post(url,data).then(res => {
             getAllData();
 
-            // $('#editModal').modal('toggle');
-            hideFunc()
+            $('#editModal').modal('toggle');
+            // hideFunc()
             setSuccessMessage('Data Update Successfully!')
         }).catch(err => {
             if(err.response.data.errors.image){
@@ -273,8 +274,8 @@ $('body').on('submit','#editForm',function(e){
     }else{
         sendUpdateAjaxRequest(url,{name: editName.val()}).then(res => {
             getAllData();
-            // $('#editModal').modal('toggle');
-            hideFunc()
+            $('#editModal').modal('toggle');
+            // hideFunc()
             setSuccessMessage('Data Update Successfully!')
         }).catch(err => {
             if(err.response.data.errors.name){

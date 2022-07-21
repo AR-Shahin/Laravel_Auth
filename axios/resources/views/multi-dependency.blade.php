@@ -58,7 +58,12 @@
 
         division_id.addEventListener("change",async (e)=>{
             let id = e.currentTarget.value;
+            if(id === ""){
+            upazila_id.innerHTML = '<option value="">Select A Upazila</option>';
+            district_id.innerHTML = '<option value="">Select A District</option>';
 
+            }
+            upazila_id.innerHTML = '<option value="">Select A Upazila</option>';
             let url = `${base_url}/multi-dependency/get-districts/${id}`;
             const response = await axios.get(url);
 
@@ -72,7 +77,7 @@
             let url = `${base_url}/multi-dependency/get-upazilas/${id}`;
             const response = await axios.get(url);
 
-            appendData(response.data.upazilas, upazila_id,"District");
+            appendData(response.data.upazilas, upazila_id,"Upazila");
 
         });
 

@@ -17,11 +17,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,5 +37,16 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'education' => 'array'
     ];
+
+    public function setEducationAttribute($values){
+        $education = [];
+        foreach ($values as $value){
+            if(!is_null($value['key'])){
+                $education[] = $value;
+            }
+        }
+        $this->attributes['education'] = json_encode($education);
+    }
 }

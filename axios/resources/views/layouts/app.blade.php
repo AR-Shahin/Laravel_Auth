@@ -39,6 +39,8 @@
                     </li>
                     <li class="list-group-item"><a href="{{ route('multi-dependency.index') }}">Multi Dependency</a>
                     </li>
+                    <li class="list-group-item"><a href="{{ route('attribute') }}">Attribute</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-9">

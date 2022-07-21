@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttributeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\UserCheckController;
@@ -43,3 +44,9 @@ Route::controller(MultiDependencyController::class)->name('multi-dependency.')->
     Route::get('get-upazilas/{district}', 'getUpazilas')->name('get-upazilas');
 
 });
+
+
+# Attribute
+
+Route::get('attribute',[AttributeController::class,'index'])->name('attribute');
+Route::post('file',[AttributeController::class,'fileUpload'])->name('file');
